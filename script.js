@@ -8,12 +8,14 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const header = document.querySelector('.header');
 const nav = document.querySelector('.nav');
 const navigation = document.querySelector('.nav__links');
 const link = document.querySelectorAll('.nav__link');
 const tabContainer = document.querySelector('.operations__tab-container');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabContent = document.querySelectorAll('.operations__content');
+
 ///////////////////////////////////////
 // All FUNCTIONS
 const openModal = function (e) {
@@ -73,8 +75,8 @@ link.forEach(function (el) {
 // Smooth SCROLLING 
 
 btnScrollTo.addEventListener('click', function (e) {
-  const s1coords = section1.getBoundingClientRect();
   /*
+  const s1coords = section1.getBoundingClientRect();
   // Before ES6 without SMOOTH
   window.scrollTo(
     s1coords.left + window.pageXOffsets,
@@ -112,13 +114,41 @@ const handleHover = function (e) {
     const siblings = e.target.closest('.nav').querySelectorAll('.nav__link');
     const logo = e.target.closest('.nav').querySelector('img');
     siblings.forEach(el => {
-      if (el !== link) {
-        el.style.opacity = this;
-      }
-      logo.style.opacity = this;
+      if (el !== link) el.style.opacity = this;
     });
+    logo.style.opacity = this;
   }
 };
-
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
+///////////////////////////////////////
+// Navigations STICKY 
+
+//AFTER ES6
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky')
+};
+const option = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+};
+const observer = new IntersectionObserver(stickyNav, option);
+observer.observe(header);
+
+// BEFORE ES6
+/*
+window.addEventListener('scroll', function () {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords.top);
+  console.log(window.scrollY);
+  if (window.scrollY > s1coords.top + window.pageYOffset) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+});
+*/
